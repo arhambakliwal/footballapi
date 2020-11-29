@@ -1,15 +1,20 @@
 from django.shortcuts import render
-import http.client
+import requests
 import json
 def start(request):
 
     city_id = [2002, 2003]
-    connection = http.client.HTTPConnection('api.football-data.org')
-    headers = {'X-Auth-Token': '529a6ff7d330482293a2fb4dfa64ce8a'}
+
+
+
+    # connection = http.client.HTTPConnection('api.football-data.org')
     data = []
     for i in city_id:
-        connection.request('GET', f'/v2/competitions/{i}/matches?matchday=1', None, headers)
-        response = json.loads(connection.getresponse().read().decode())
+        # connection.request('GET', f'/v2/competitions/{i}/matches?matchday=1', None, headers)
+        # response = json.loads(connection.getresponse().read().decode())
+        url = (f'http://api.football-data.org/v2/competitions/{i}/matches?matchday=1')
+        headers = {'X-Auth-Token': '529a6ff7d330482293a2fb4dfa64ce8a'}
+        response = requests.get(url, headers=headers).json()
         data.append(response)
     d = []
     for i in range(len(data)):
@@ -18,8 +23,11 @@ def start(request):
     finaldata = []
     for i in city_id:
         b = d[a]
-        connection.request('GET', f'/v2/competitions/{i}/matches?matchday={b}', None, headers)
-        response = json.loads(connection.getresponse().read().decode())
+        # connection.request('GET', f'/v2/competitions/{i}/matches?matchday={b}', None, headers)
+        # response = json.loads(connection.getresponse().read().decode())
+        url = (f'http://api.football-data.org/v2/competitions/{i}/matches?matchday={b}')
+        headers = {'X-Auth-Token': '529a6ff7d330482293a2fb4dfa64ce8a'}
+        response = requests.get(url, headers=headers).json()
         finaldata.append(response)
         a += 1
 
